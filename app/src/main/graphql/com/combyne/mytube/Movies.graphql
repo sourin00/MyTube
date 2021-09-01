@@ -1,0 +1,12 @@
+query movies {
+    movies(first: 10, order: [createdAt_DESC]) {
+        edges {
+            node {
+                id
+                title
+                releaseDate
+                seasons
+            }
+        }
+    }
+}

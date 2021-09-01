@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/dashboardFragment">
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.combyne.mytube.ui.shows.DashboardFragment"
+        android:label="fragment_dashboard"
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboardFragment_to_showsFragment"
+            app:destination="@id/showsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_addShowFragment"
+            app:destination="@id/addShowFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showsFragment"
+        android:name="com.combyne.mytube.ui.shows.ShowsFragment"
+        android:label="fragment_shows"
+        tools:layout="@layout/fragment_shows">
+        <action
+            android:id="@+id/action_showsFragment_to_addShowFragment"
+            app:destination="@id/addShowFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addShowFragment"
+        android:name="com.combyne.mytube.ui.shows.AddShowFragment"
+        android:label="fragment_add_show"
+        tools:layout="@layout/fragment_add_show">
+        <action
+            android:id="@+id/action_addShowFragment_to_showsFragment"
+            app:destination="@id/showsFragment" />
+    </fragment>
+</navigation>
