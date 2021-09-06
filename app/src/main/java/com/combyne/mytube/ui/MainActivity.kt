@@ -13,7 +13,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 }
+
 const val ADD_SHOW_RESULT_OK = Activity.RESULT_FIRST_USER
-const val ADD_SHOW_RESULT_ERROR = Activity.RESULT_FIRST_USER+1
+const val ADD_SHOW_RESULT_ERROR = Activity.RESULT_FIRST_USER + 1
 const val ADD_SHOW_REQUEST_KEY = "add_show_request"
 const val ADD_SHOW_RESULT_KEY = "add_show_result"

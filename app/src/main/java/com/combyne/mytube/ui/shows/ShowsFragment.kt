@@ -33,11 +33,15 @@ class ShowsFragment : Fragment(R.layout.fragment_shows) {
             recyclerViewShows.apply {
                 adapter = showsAdapter
                 layoutManager = LinearLayoutManager(requireContext())
+                // performance optimization
                 setHasFixedSize(true)
+                // shrink/extend animation for extended FAB on recycler view scroll
                 addOnScrollListener(ExtendedFabOnScrollListener(extFabAddShow))
             }
         }
         viewModel.shows.observe(viewLifecycleOwner) {
+            // Submit the entire list whenever there is change in the sqlite table.
+            // DiffUtil will take care of updating only updated items.
             showsAdapter.submitList(it)
         }
         setFragmentResultListener(ADD_SHOW_REQUEST_KEY) { _, bundle ->
@@ -45,12 +49,15 @@ class ShowsFragment : Fragment(R.layout.fragment_shows) {
             viewModel.onAddShowResult(result)
         }
 
+        // wait for the event to be received only after the fragment is visible
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.showsEvent.collect { event ->
                 when (event) {
+                    // show success/error msg on add show
                     is ShowsViewModel.ShowsEvent.ShowAddedMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
+                    // control loading state from event sent from view model
                     is ShowsViewModel.ShowsEvent.ToggleLoaderEvent -> {
                         binding.progressBar.visibility = if (event.show) View.VISIBLE else View.GONE
                     }

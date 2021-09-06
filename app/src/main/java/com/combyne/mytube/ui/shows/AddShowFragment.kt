@@ -29,6 +29,8 @@ class AddShowFragment : Fragment(R.layout.fragment_add_show) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentAddShowBinding.bind(view)
+
+        // initialize views
         binding.apply {
             txtFieldShowName.editText?.setText(viewModel.showName)
             txtFieldReleaseDate.editText?.setText(
@@ -64,9 +66,14 @@ class AddShowFragment : Fragment(R.layout.fragment_add_show) {
                 viewModel.onSaveShowClick(requireContext())
             }
         }
+
+        // wait for the event to be received only after the fragment is visible
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.addShowEvent.collect { event ->
                 when (event) {
+
+                    // even while navigating back we use an event as we don't
+                    // want view related stuff inside the view model.
                     is AddShowViewModel.AddShowEvent.NavigateBackWithResult -> {
                         binding.txtFieldShowName.clearFocus()
                         binding.txtFieldSeasons.clearFocus()
@@ -76,9 +83,12 @@ class AddShowFragment : Fragment(R.layout.fragment_add_show) {
                         )
                         findNavController().popBackStack()
                     }
+
                     is AddShowViewModel.AddShowEvent.ShowInvalidInputMessage -> {
                         binding.txtFieldShowName.error = event.msg
                     }
+
+                    // control loading state from event sent from view model
                     is AddShowViewModel.AddShowEvent.ToggleLoaderEvent -> {
                         if (event.show) {
                             binding.btnSaveShow.isEnabled = false
@@ -93,5 +103,6 @@ class AddShowFragment : Fragment(R.layout.fragment_add_show) {
                 }
             }
         }
+
     }
 }

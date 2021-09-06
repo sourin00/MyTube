@@ -19,17 +19,24 @@ class ShowsRepository @Inject constructor(
     private val tvShowManagerAPI: TvShowManagerAPI
 ) {
 
+    // Make GraphQL query 'movies' to fetch most recent 10 movies.
+    // Pagination not implemented yet.
     fun queryShows(listener: StateListener): Flow<List<Show>> {
         CoroutineScope(Dispatchers.Main).launch {
+            //show loader
             listener.onComplete(StateListener.State.LOADING)
             try {
                 val data =
-                    tvShowManagerAPI.getApolloClient().query(MoviesQuery()).await().data?.movies?.edges
+                    tvShowManagerAPI.getApolloClient().query(MoviesQuery())
+                        .await().data?.movies?.edges
                 data?.forEach {
                     it?.node?.apply {
+                        // cache data fetched from server in local Sqlite DB and
+                        // then only display in UI to maintain Single Source of Truth principle.
                         val releaseDate = DateUtils.getTimeStamp(releaseDate as String)
                         val show = showsDao.isExist(id)
                         val showRefreshed = Show(title, releaseDate, seasons ?: 0.0, id)
+                        // detect existing data by ID from server and update it or insert fresh
                         if (show != null) {
                             showsDao.update(showRefreshed)
                         } else showsDao.insert(showRefreshed)
@@ -40,10 +47,19 @@ class ShowsRepository @Inject constructor(
                 listener.onComplete(StateListener.State.ERROR)
             }
         }
+        // return cached list of shows/movies from local DB
         return showsDao.getShows()
     }
 
-    suspend fun createMovie(title: String, releaseDate: String, seasons: Double,listener: StateListener){
+    // Make GraphQL mutation 'createMovie' to send new TV Show data to server.
+    // Insert the new Show object in local DB after success from Server.
+    // View automatically updates as observing LiveData on the show table.
+    suspend fun createMovie(
+        title: String,
+        releaseDate: String,
+        seasons: Double,
+        listener: StateListener
+    ) {
         try {
             listener.onComplete(StateListener.State.LOADING)
             val data = tvShowManagerAPI.getApolloClient()

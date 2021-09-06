@@ -33,6 +33,7 @@ class ShowsAdapter : ListAdapter<Show, ShowsAdapter.ShowsViewHolder>(DiffCallbac
         }
     }
 
+    // DiffUtil makes sure to only update views for updated or new items in the list which improves performance
     class DiffCallback : DiffUtil.ItemCallback<Show>() {
         override fun areItemsTheSame(oldItem: Show, newItem: Show): Boolean =
             oldItem.id == newItem.id

@@ -12,6 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor() : ViewModel() {
+
+    // prepare data for view to display via event through channel
     fun onAddShowResult(result: Int) {
         when (result) {
             ADD_SHOW_RESULT_OK -> showSaveSuccessMessage("Show added successfully")
@@ -27,6 +29,8 @@ class DashboardViewModel @Inject constructor() : ViewModel() {
         dashboardEventChannel.send(DashBoardEvent.ShowAddedMessage(text))
     }
 
+    // we use channels to communicate between view model and view to
+    // decouple code and responsibility between components
     private val dashboardEventChannel = Channel<DashBoardEvent>()
     val dashBoardEvent = dashboardEventChannel.receiveAsFlow()
 

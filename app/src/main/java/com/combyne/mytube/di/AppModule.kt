@@ -16,7 +16,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+// We use a single hilt module to provide all dependencies as our app is small.
+// It will be better to break down into individual modules for Repository, Database, Network
+// as our app keeps growing.
 object AppModule {
+
     @Provides
     @Singleton
     fun getDatabase(app: Application, callback: ShowDatabase.Callback) =

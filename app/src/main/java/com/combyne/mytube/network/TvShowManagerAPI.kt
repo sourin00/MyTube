@@ -4,11 +4,12 @@ import android.os.Looper
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.interceptor.ApolloInterceptor
 import com.apollographql.apollo.interceptor.ApolloInterceptorChain
-import com.apollographql.apollo.request.RequestHeaders
 import okhttp3.OkHttpClient
 import java.util.concurrent.Executor
 
 class TvShowManagerAPI {
+
+    // Prepare Apollo Client over here to use for making GraphQL calls
     fun getApolloClient(): ApolloClient {
         check(Looper.myLooper() == Looper.getMainLooper()) {}
         val okHttpClient = OkHttpClient.Builder().build()
@@ -30,7 +31,7 @@ class TvShowManagerAPI {
                 }
 
                 override fun dispose() {
-
+                    // no resources need to be disposed off as of now.
                 }
             })
             .build()

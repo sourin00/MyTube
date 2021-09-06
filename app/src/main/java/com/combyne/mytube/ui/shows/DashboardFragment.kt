@@ -36,15 +36,20 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
             }
         }
 
+        // get fragment result when popbackstack called on AddShowFragment to receive success/error flag
         setFragmentResultListener(ADD_SHOW_REQUEST_KEY) { _, bundle ->
             val result = bundle.getInt(ADD_SHOW_RESULT_KEY)
+            // delegating data preparation logic to viewmodel and
+            // receive return event through channel from viewmodel to decouple code
             viewModel.onAddShowResult(result)
         }
 
+        // wait for the event to be received only after the fragment is visible
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.dashBoardEvent.collect { event ->
                 when (event) {
                     is DashboardViewModel.DashBoardEvent.ShowAddedMessage -> {
+                        // show success/error msg on add show
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                 }

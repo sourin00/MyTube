@@ -34,6 +34,7 @@ class ShowsViewModel @Inject constructor(
         showsEventChannel.send(ShowsEvent.ShowAddedMessage(text))
     }
 
+    // prepare data in LiveData form for the view lifecycle owner to observe
     val shows: LiveData<List<Show>> = showsRepository.queryShows(object : StateListener {
         override fun onComplete(s: StateListener.State) = when (s) {
             StateListener.State.SUCCESS -> onSuccessEvent()
